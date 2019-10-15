@@ -1,0 +1,29 @@
+{
+  "name": "validatorz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zwhitchcox/validatorz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zwhitchcox/validatorz/issues"
+  },
+  "homepage": "https://github.com/zwhitchcox/validatorz#readme",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "typescript": "^3.6.4"
+  },
+  "devDependencies": {
+    "expect": "^24.9.0",
+    "tezt": "^1.1.0",
+    "ts-node": "^8.4.1"
+  }
+}
