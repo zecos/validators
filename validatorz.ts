@@ -1,4 +1,4 @@
-import { presets } from './validator-presets'
+export { presets } from './validator-presets'
 
 export type ICharValidatorOptions = {
   mustContain?: string[] | string,
@@ -33,14 +33,11 @@ export const charHashes = {
 }
 
 export const getHash = str => charHashes[str] ? charHashes[str] : charsToHash(str)
+
 export const combineHashes = (...hashes) => hashes.reduce((prev, cur) => ({...prev, ...getHash(cur)}), {})
 
 const getHumanList = (arr, conjunction = "and") => [arr.slice(0, -1).join(', '), arr.slice(-1)[0]]
   .join(arr.length < 2 ? '' : arr.length < 3 ? ` ${conjunction} ` : `, ${conjunction} `)
-
-const checkValidChar = (validChars, char) => {
-}
-
 
 export const createBinaryHash = (acc, cur, idx) => {
   const binaryRepresentation = (1 << idx)
@@ -132,9 +129,9 @@ export const createValidator = (options: ICharValidatorOptions) => {
   }
 }
 
-function camelToTitle (camelCase) {
-  return camelCase
-    .replace(/([A-Z])/g, (match) => ` ${match}`)
-    .replace(/^./, (match) => match.toUpperCase())
-    .trim()
-}
+// function camelToTitle (camelCase) {
+//   return camelCase
+//     .replace(/([A-Z])/g, (match) => ` ${match}`)
+//     .replace(/^./, (match) => match.toUpperCase())
+//     .trim()
+// }

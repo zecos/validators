@@ -8,12 +8,12 @@ export const presets = {
   username: {
     min: 3,
     max: 40,
-    validChars: ["letters", "numbers", "_-"]
+    validChars: ["letters", "digits", "_-"]
   },
   phone: {
     min: 10,
     max: 10,
-    validChars: ["numbers"],
+    validChars: ["digits"],
   },
   password: {
     mustContain: {

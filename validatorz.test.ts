@@ -1,5 +1,12 @@
 import { test, /*describe, before, after, afterEach, beforeEach*/ } from 'tezt'
-import { createBinaryHash, getHash, createMustContainChecker, createValidCharsChecker, createValidator } from './validatorz';
+import {
+    createBinaryHash,
+    getHash,
+    createMustContainChecker,
+    createValidCharsChecker,
+    createValidator,
+    presets
+} from './validatorz';
 import expect from 'expect'
 
 test('create binary hash', () => {
@@ -33,6 +40,22 @@ test('it detects must contain', () => {
 })
 
 test('integration all checkers', () => {
+  const passwordValidator = createValidator({
+    mustContain: ["symbols", "uppercase", "lowercase", "digits"],
+    validChars: ["symbols", "alphanumeric"],
+    min: 8,
+    max: 45,
+  })
+  expect(() => {
+    passwordValidator("Password#1805")
+  }).not.toThrow()
+  expect(() => {
+    passwordValidator("password#1805")
+  }).toThrow()
+})
+
+test('use presets', () => {
+  presets.email
   const passwordValidator = createValidator({
     mustContain: ["symbols", "uppercase", "lowercase", "digits"],
     validChars: ["symbols", "alphanumeric"],
