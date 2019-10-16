@@ -1,68 +1,65 @@
-import { test, describe, before, after, afterEach, beforeEach } from 'tezt'
-import { charHashes, createCharValidator, combineHashes } from './validatorz';
+import { test, /*describe, before, after, afterEach, beforeEach*/ } from 'tezt'
+import {
+    createBinaryHash,
+    getHash,
+    createMustContainChecker,
+    createValidCharsChecker,
+    createValidator,
+    presets
+} from './validatorz';
 import expect from 'expect'
 
-import * as wasm from './rust/pkg'
-wasm.greet()
-
-
-const testValidator = ({options, input, pass}) => {
-  const validator = createCharValidator(options)
-  if (pass) {
-    expect(validator(input)).toBe(true)
-  } else {
-    expect(() => {
-      validator(input)
-    }).toThrow()
-  }
-}
+test('create binary hash', () => {
+  const mustContain = ["letters", "digits", "uppercase"]
+  const binaryHash = mustContain
+    .reverse()
+    .map(getHash)
+    .reduce(createBinaryHash, {})
+  expect(binaryHash["Z"]).toBe(0b101)
+  expect(binaryHash["1"]).toBe(0b010)
+  expect(binaryHash["z"]).toBe(0b100)
+  const checkVal = parseInt("1".repeat(mustContain.length), 2)
+  expect(binaryHash["Z"] | binaryHash["1"]).toBe(checkVal)
+})
 
 test('it detects valid chars', () => {
-  testValidator({
-      options: {
-        validChars: "lowercase",
-      },
-      input: "iurbvqoeiruqe",
-      pass: true,
-  })
-  testValidator({
-    options: {
-      validChars: "lowercase",
-    },
-    input: "iuRBVQoeiruqe",
-    pass: false,
-  })
-  testValidator({
-    options: {
-      validChars: "uppercase",
-    },
-    input: "IURBVQOEIRUQE",
-    pass: true,
-  })
-  testValidator({
-    options: {
-      validChars: "uppercase",
-    },
-    input: "IURBvqoEIRUQE",
-    pass: false,
-  })
+  expect(() => createValidCharsChecker("lowercase")("iurbvqoeiruqe")).not.toThrow()
+  expect(() => createValidCharsChecker("uppercase")("IURBVQOEIRUQE")).not.toThrow()
+  expect(() => createValidCharsChecker("lowercase")("iURBVqoeiruqe")).toThrow()
+  expect(() => createValidCharsChecker("uppercase")("iURBVqoeiruqe")).toThrow()
 })
 
 test('it detects must contain', () => {
-  testValidator({
-      options: {
-        validChars: ["letters", "symbols", "#! "],
-        mustContain: ["#! "]
-      },
-      input: "a!we #",
-      pass: true,
+  const mustContain = ["letters", "symbols", "#! "]
+  expect(() => {
+    createMustContainChecker(mustContain)("a!we #")
+  }).not.toThrow()
+  expect(() => {
+    createMustContainChecker(mustContain)("aweasdqweq$")
+  }).toThrow()
+})
+
+test('integration all checkers', () => {
+  const passwordValidator = createValidator({
+    mustContain: ["symbols", "uppercase", "lowercase", "digits"],
+    validChars: ["symbols", "alphanumeric"],
+    min: 8,
+    max: 45,
   })
-  testValidator({
-    options: {
-      validChars: ["letters", "symbols", "#! "],
-      mustContain: ["#! "]
-    },
-    input: "awe #",
-    pass: false,
-  })
+  expect(() => {
+    passwordValidator("Password#1805")
+  }).not.toThrow()
+  expect(() => {
+    passwordValidator("password#1805")
+  }).toThrow()
+})
+
+test('use presets', () => {
+  const emailValidator = createValidator(presets.email)
+  expect(() => {
+    emailValidator("zwhit_chcox@gmail.com")
+  }).not.toThrow()
+  expect(() => {
+    emailValidator("password#1805")
+  }).toThrow()
 })

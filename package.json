@@ -1,8 +1,9 @@
 {
   "name": "validatorz",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/validatorz.js",
+  "types": "./validatorz.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,13 +18,11 @@
     "url": "https://github.com/zwhitchcox/validatorz/issues"
   },
   "homepage": "https://github.com/zwhitchcox/validatorz#readme",
-  "dependencies": {
-    "lodash": "^4.17.15",
-    "typescript": "^3.6.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "expect": "^24.9.0",
     "tezt": "^1.1.0",
-    "ts-node": "^8.4.1"
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.4"
   }
 }
