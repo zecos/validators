@@ -1,12 +1,18 @@
-import { has } from 'lodash';
 import { presets } from './validator-presets'
-import _ from 'lodash'
-import { matcherErrorMessage } from 'jest-matcher-utils';
+
+export type ICharValidatorOptions = {
+  mustContain?: string[] | string,
+  validChars?: string[] | string,
+  min?: number,
+  max?: number,
+  regexp?: RegExp | string,
+}
 
 const alphabetLower = 'abcdefghijklmnopqrstuvwxyz'
 const alphabetUpper = alphabetLower.toUpperCase()
 const alphabetAll = alphabetLower + alphabetUpper
 const digits = '0123456789'
+const alphanumeric = alphabetAll + digits
 const symbols = `!@#$%^&*()_-+=[{]}\\|><.,?/"';:~\``
 
 const charsToHash = chars => chars
@@ -22,6 +28,7 @@ export const charHashes = {
   uppercase: charsToHash(alphabetUpper),
   digits: charsToHash(digits),
   symbols: charsToHash(symbols),
+  alphanumeric: charsToHash(alphanumeric),
   spaces: charsToHash(" ")
 }
 
@@ -34,13 +41,6 @@ const getHumanList = (arr, conjunction = "and") => [arr.slice(0, -1).join(', '),
 const checkValidChar = (validChars, char) => {
 }
 
-type ICharValidatorOptions = {
-  mustContain?: string[],
-  validChars?: string[] | string,
-  min?: number,
-  max?: number,
-  regexp?: RegExp | string,
-}
 
 export const createBinaryHash = (acc, cur, idx) => {
   const binaryRepresentation = (1 << idx)
@@ -53,7 +53,7 @@ export const createBinaryHash = (acc, cur, idx) => {
 export const surroundQuotes = str => `"${str}"`
 
 export const createMustContainChecker = mustContain => {
-  const binaryHash = mustContain
+  const binaryHash = [].concat(mustContain)
     .map(getHash)
     .reduce(createBinaryHash, {})
   const checkVal = parseInt("1".repeat(mustContain.length), 2)
@@ -90,8 +90,8 @@ export const createValidateMin = min => str => {
 }
 
 export const createValidateMax = max => str => {
-  if (str.length < max) {
-    throw new Error(`Must be at least ${max} characters long.`)
+  if (str.length > max) {
+    throw new Error(`Must be no longer than ${max} characters long.`)
   }
 }
 
