@@ -55,17 +55,11 @@ test('integration all checkers', () => {
 })
 
 test('use presets', () => {
-  presets.email
-  const passwordValidator = createValidator({
-    mustContain: ["symbols", "uppercase", "lowercase", "digits"],
-    validChars: ["symbols", "alphanumeric"],
-    min: 8,
-    max: 45,
-  })
+  const emailValidator = createValidator(presets.email)
   expect(() => {
-    passwordValidator("Password#1805")
+    emailValidator("zwhit_chcox@gmail.com")
   }).not.toThrow()
   expect(() => {
-    passwordValidator("password#1805")
+    emailValidator("password#1805")
   }).toThrow()
 })
