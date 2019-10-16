@@ -1,6 +1,6 @@
 {
   "name": "validatorz",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "./dist/validatorz.js",
   "types": "./validatorz.d.ts",
@@ -18,8 +18,7 @@
     "url": "https://github.com/zwhitchcox/validatorz/issues"
   },
   "homepage": "https://github.com/zwhitchcox/validatorz#readme",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "expect": "^24.9.0",
     "tezt": "^1.1.0",
