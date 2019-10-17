@@ -1,6 +1,4 @@
-import { IValidatorzInputRequirements, IValidatorzValidateOptions, IValidatorzNumberRequirements } from './types'
-import { presets } from './presets'
-
+import { IValidatorzInputRequirements, IValidatorzValidateOptions, IValidatorzNumberRequirements, IValidatorzStringRequirements, StringValidatorFn } from './types'
 
 const alphabetLower = 'abcdefghijklmnopqrstuvwxyz'
 const alphabetUpper = alphabetLower.toUpperCase()
@@ -43,7 +41,7 @@ export const createBinaryHash = (acc, cur, idx) => {
 
 export const surroundQuotes = str => `"${str}"`
 
-export const createMustContainChecker = mustContain => {
+export const createMustContainValidator = (mustContain): StringValidatorFn => {
   const mustContainNames = [].concat(mustContain)
     .map(name => charHashes[name] ? camelToLower(name) : name)
 
@@ -57,7 +55,7 @@ export const createMustContainChecker = mustContain => {
     let curVal = 0
     for (const char of str) {
       if ((curVal |= binaryHash[char]) === checkVal) {
-        return
+        return []
       }
     }
     // not found, so retrieve names of missing values
@@ -70,11 +68,23 @@ export const createMustContainChecker = mustContain => {
     }
 
     const humanList = getHumanList(notContained.map(surroundQuotes))
-    return new Error(`Must contain ${humanList}`)
+    return [new Error(`Must contain ${humanList}`)]
   }
 }
 
-export const createValidCharsChecker = validChars => {
+export const createStringMinValidator = (min): StringValidatorFn => str => {
+  if (str.length < min) {
+    return [new Error(`Must be at least ${min} characters long.`)]
+  }
+}
+
+export const createStringMaxValidator = (max): StringValidatorFn=> str => {
+  if (str.length > max) {
+    return [new Error(`Must be no longer than ${max} characters long.`)]
+  }
+}
+
+export const createValidCharsValidator = (validChars): StringValidatorFn =>  {
   const validCharsArr = [].concat(validChars)
   const humanList = getHumanList(validCharsArr.map(surroundQuotes))
   const errorMessageTail = ` is not allowed. Only ${humanList} are allowed.`
@@ -82,44 +92,16 @@ export const createValidCharsChecker = validChars => {
   return str => {
     for (const char of str) {
       if (!validCharsCombined[char]) {
-        return new Error(char + errorMessageTail)
+        return [new Error(char + errorMessageTail)]
       }
     }
+    return []
   }
 }
 
-export const createValidateMin = min => str => {
-  if (str.length < min) {
-    return new Error(`Must be at least ${min} characters long.`)
-  }
-}
-
-export const createValidateMax = max => str => {
-  if (str.length > max) {
-    return new Error(`Must be no longer than ${max} characters long.`)
-  }
-}
-
-export const createValidateNumberMax = max => num => {
-  if (Number(num) > max) {
-    return new Error(`Must be less than or equal to ${max}.`)
-  }
-}
-
-export const createNumValidator = ({min, max}: IValidatorzNumberRequirements) => num => {
-  num = Number(num)
-  if (min && num < min) {
-    return [new Error(`Must be greater than or equal to ${min}.`)]
-  }
-  if (max && num > max) {
-    return [new Error(`Must be less than or equal to ${max}.`)]
-  }
-  return []
-}
-
-export const createValidateRegexp = regexp => str => {
+export const createRegexpValidator = (regexp): StringValidatorFn => str => {
   if (!regexp.test(str)) {
-    return new Error(`Invalid input.`)
+    return [new Error(`Invalid input.`)]
   }
 }
 
@@ -127,45 +109,36 @@ const defaultValidateOptions = {
   maxErrors: Infinity,
 }
 
-export const createValidator = (requirements: IValidatorzInputRequirements | string) => {
-  if (typeof requirements === "string") {
-    requirements = presets[requirements]
-  }
-  requirements = (requirements as IValidatorzInputRequirements)
-
+export const createStringValidator = (requirements: IValidatorzStringRequirements): StringValidatorFn => {
   const validatorFns = []
 
-  if (requirements.number) {
-    return createNumValidator(requirements.number)
-  }
-
   if (requirements.mustContain) {
-    validatorFns.push(createMustContainChecker(requirements.mustContain))
+    validatorFns.push(createMustContainValidator(requirements.mustContain))
   }
 
   if (requirements.validChars) {
-    validatorFns.push(createValidCharsChecker(requirements.validChars))
+    validatorFns.push(createValidCharsValidator(requirements.validChars))
   }
 
   if (requirements.min) {
-    validatorFns.push(createValidateMin(requirements.min))
+    validatorFns.push(createStringMinValidator(requirements.min))
   }
 
   if (requirements.max) {
-    validatorFns.push(createValidateMax(requirements.max))
+    validatorFns.push(createStringMaxValidator(requirements.max))
   }
 
   if (requirements.regexp) {
     const regexp = requirements.regexp instanceof RegExp ? requirements.regexp : new RegExp(requirements.regexp)
-    validatorFns.push(createValidateRegexp(regexp))
+    validatorFns.push(createRegexpValidator(regexp))
   }
 
   return (str: string, options: IValidatorzValidateOptions = defaultValidateOptions): Error[] => {
-    const errors = []
+    let errors = []
     for (const validatorFn of validatorFns) {
       const newError = validatorFn(str)
       if (newError) {
-        errors.push(newError)
+        errors = errors.concat(newError)
         if (errors.length > options.maxErrors) {
           break
         }
@@ -175,12 +148,27 @@ export const createValidator = (requirements: IValidatorzInputRequirements | str
   }
 }
 
-function camelToTitle (camelCase) {
-  return camelCase
-    .replace(/([A-Z])/g, (match) => ` ${match}`)
-    .replace(/^./, (match) => match.toUpperCase())
-    .trim()
+export const createNumberValidator = ({min, max}: IValidatorzNumberRequirements) => {
+  max = max || Infinity
+  min = min || -Infinity
+  return (num: number | string): Error[] => {
+    if (typeof num !== "number") {
+      const originalNumber = num
+      num = Number(num)
+      if (Number.isNaN(num)) {
+        return [new Error(`Could not convert ${originalNumber} to a number.`)]
+      }
+    }
+    if (num < min) {
+      return [new Error(`Must be greater than or equal to ${min}.`)]
+    }
+    if (num > max) {
+      return [new Error(`Must be less than or equal to ${max}.`)]
+    }
+    return []
+  }
 }
+
 
 function camelToLower (camelCase) {
   return camelCase
