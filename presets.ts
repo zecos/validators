@@ -1,9 +1,16 @@
+import { IValidatorzPresets } from './types'
+
 export const presets = {
   name: {
     min: 1,
     max: 40,
     validChars: ["letters", "., "],
-    spellcheck: false,
+  },
+  age: {
+    number: {
+      min: 0,
+      max: 120,
+    }
   },
   username: {
     min: 3,

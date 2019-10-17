@@ -3,9 +3,10 @@
   "version": "1.0.1",
   "description": "",
   "main": "./dist/validatorz.js",
-  "types": "./validatorz.d.ts",
+  "types": "./types.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

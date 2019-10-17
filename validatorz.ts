@@ -1,12 +1,6 @@
-export { presets } from './validator-presets'
+import { IValidatorzInputRequirements, IValidatorzValidateOptions, IValidatorzNumberRequirements } from './types'
+import { presets } from './presets'
 
-export type ICharValidatorOptions = {
-  mustContain?: string[] | string,
-  validChars?: string[] | string,
-  min?: number,
-  max?: number,
-  regexp?: RegExp | string,
-}
 
 const alphabetLower = 'abcdefghijklmnopqrstuvwxyz'
 const alphabetUpper = alphabetLower.toUpperCase()
@@ -50,19 +44,33 @@ export const createBinaryHash = (acc, cur, idx) => {
 export const surroundQuotes = str => `"${str}"`
 
 export const createMustContainChecker = mustContain => {
-  const binaryHash = [].concat(mustContain)
+  const mustContainNames = [].concat(mustContain)
+    .map(name => charHashes[name] ? camelToLower(name) : name)
+
+  const binaryHash = mustContainNames
+    .reverse()
     .map(getHash)
     .reduce(createBinaryHash, {})
   const checkVal = parseInt("1".repeat(mustContain.length), 2)
+
   return str => {
     let curVal = 0
     for (const char of str) {
       if ((curVal |= binaryHash[char]) === checkVal) {
-        return true
+        return
       }
     }
-    // reached the end without finding all "must contain" characters
-    throw new Error(`Must contain ${getHumanList(mustContain.map(surroundQuotes))}`)
+    // not found, so retrieve names of missing values
+    const notContained = []
+    for (const idx in mustContainNames) {
+      if (!(curVal & 1)) {
+          notContained.push(mustContainNames[idx])
+      }
+      curVal >>= 1
+    }
+
+    const humanList = getHumanList(notContained.map(surroundQuotes))
+    return new Error(`Must contain ${humanList}`)
   }
 }
 
@@ -74,7 +82,7 @@ export const createValidCharsChecker = validChars => {
   return str => {
     for (const char of str) {
       if (!validCharsCombined[char]) {
-        throw new Error(char + errorMessageTail)
+        return new Error(char + errorMessageTail)
       }
     }
   }
@@ -82,50 +90,88 @@ export const createValidCharsChecker = validChars => {
 
 export const createValidateMin = min => str => {
   if (str.length < min) {
-    throw new Error(`Must be at least ${min} characters long.`)
+    return new Error(`Must be at least ${min} characters long.`)
   }
 }
 
 export const createValidateMax = max => str => {
   if (str.length > max) {
-    throw new Error(`Must be no longer than ${max} characters long.`)
+    return new Error(`Must be no longer than ${max} characters long.`)
   }
+}
+
+export const createValidateNumberMax = max => num => {
+  if (Number(num) > max) {
+    return new Error(`Must be less than or equal to ${max}.`)
+  }
+}
+
+export const createNumValidator = ({min, max}: IValidatorzNumberRequirements) => num => {
+  num = Number(num)
+  if (min && num < min) {
+    return [new Error(`Must be greater than or equal to ${min}.`)]
+  }
+  if (max && num > max) {
+    return [new Error(`Must be less than or equal to ${max}.`)]
+  }
+  return []
 }
 
 export const createValidateRegexp = regexp => str => {
   if (!regexp.test(str)) {
-    throw new Error(`Invalid input.`)
+    return new Error(`Invalid input.`)
   }
 }
 
-export const createValidator = (options: ICharValidatorOptions) => {
+const defaultValidateOptions = {
+  maxErrors: Infinity,
+}
+
+export const createValidator = (requirements: IValidatorzInputRequirements | string) => {
+  if (typeof requirements === "string") {
+    requirements = presets[requirements]
+  }
+  requirements = (requirements as IValidatorzInputRequirements)
+
   const validatorFns = []
 
-  if (options.mustContain) {
-    validatorFns.push(createMustContainChecker(options.mustContain))
+  if (requirements.number) {
+    return createNumValidator(requirements.number)
   }
 
-  if (options.validChars) {
-    validatorFns.push(createValidCharsChecker(options.validChars))
+  if (requirements.mustContain) {
+    validatorFns.push(createMustContainChecker(requirements.mustContain))
   }
 
-  if (options.min) {
-    validatorFns.push(createValidateMin(options.min))
+  if (requirements.validChars) {
+    validatorFns.push(createValidCharsChecker(requirements.validChars))
   }
 
-  if (options.max) {
-    validatorFns.push(createValidateMax(options.max))
+  if (requirements.min) {
+    validatorFns.push(createValidateMin(requirements.min))
   }
 
-  if (options.regexp) {
-    const regexp = options.regexp instanceof RegExp ? options.regexp : new RegExp(options.regexp)
+  if (requirements.max) {
+    validatorFns.push(createValidateMax(requirements.max))
+  }
+
+  if (requirements.regexp) {
+    const regexp = requirements.regexp instanceof RegExp ? requirements.regexp : new RegExp(requirements.regexp)
     validatorFns.push(createValidateRegexp(regexp))
   }
 
-  return str => {
+  return (str: string, options: IValidatorzValidateOptions = defaultValidateOptions): Error[] => {
+    const errors = []
     for (const validatorFn of validatorFns) {
-      validatorFn(str)
+      const newError = validatorFn(str)
+      if (newError) {
+        errors.push(newError)
+        if (errors.length > options.maxErrors) {
+          break
+        }
+      }
     }
+    return errors
   }
 }
 
@@ -133,5 +179,12 @@ function camelToTitle (camelCase) {
   return camelCase
     .replace(/([A-Z])/g, (match) => ` ${match}`)
     .replace(/^./, (match) => match.toUpperCase())
+    .trim()
+}
+
+function camelToLower (camelCase) {
+  return camelCase
+    .replace(/([A-Z])/g, (match) => ` ${match}`)
+    .replace(/ ./g, (match) => match.toLowerCase())
     .trim()
 }
