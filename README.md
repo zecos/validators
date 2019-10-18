@@ -133,7 +133,7 @@ Yarn:
 `yarn add validatorz`
 
 Npm:
-`npm i validators`
+`npm i validatorz`
 
 
 ### Dependencies
