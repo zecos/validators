@@ -75,3 +75,10 @@ test('digits', () => {
   testValidator(numberValidator, 1, [new Error("Must be greater than or equal to 3.")])
   testValidator(numberValidator, 10, [new Error("Must be less than or equal to 9.")])
 })
+
+test('hoc', () => {
+  const dobValidator = createValidator("dob")
+  testValidator(dobValidator, new Date(1920, 1,1), [])
+  testValidator(dobValidator, new Date(1820, 1,1), [new Error("Date of birth cannot be before January 1, 1900")])
+
+})

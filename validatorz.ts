@@ -1,4 +1,4 @@
-import { IValidatorzInputRequirements, IValidatorzValidateOptions, IValidatorzNumberRequirements, IValidatorzStringRequirements, StringValidatorFn } from './types'
+import { IValidatorzValidateOptions, IValidatorzNumberRequirements, IValidatorzStringRequirements, StringValidatorFn } from './types'
 
 const alphabetLower = 'abcdefghijklmnopqrstuvwxyz'
 const alphabetUpper = alphabetLower.toUpperCase()

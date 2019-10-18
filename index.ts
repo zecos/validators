@@ -1,17 +1,22 @@
-export { createStringValidator, createNumberValidator } from './validatorz'
 import { createStringValidator, createNumberValidator } from './validatorz'
-import {presets} from './presets'
-import { IValidatorzInputRequirements } from './types'
+import { presets } from './presets'
+import { IValidatorzRequirements } from './types'
 
-export const createValidator = (requirements: IValidatorzInputRequirements | string) => {
+export { createStringValidator, createNumberValidator } from './validatorz'
+export { presets } from './presets'
+
+
+
+export const createValidator = (requirements: IValidatorzRequirements) => {
+  if (typeof requirements === "function") {
+    return requirements()
+  }
   if (typeof requirements === "string") {
     const preset = presets[requirements]
     if (!preset) {
-      if (requirements === "birthDate")
-        throw new Error("birthDate was changed to dob")
       throw new Error(`Cannot find preset ${requirements}`)
     }
-    return preset
+    return createValidator(preset)
   }
   switch (requirements.type) {
     case "number":

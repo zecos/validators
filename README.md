@@ -127,6 +127,36 @@ export const presets = {
 }
 ```
 
+### Higher Order Functions
+
+You can also pass in a function to `createValidator` that simply creates a validation function.
+
+For instance, this is a version of the `dob` validator:
+
+```ts
+const dobValidatorCreator = () => {
+  const min = new Date(1900, 1, 0)
+  return date => {
+    if (!(date instanceof Date)) {
+      try {
+        date = new Date(date)
+      } catch (e) {
+        return [new Error(`Could not convert ${date} into a date`)]
+      }
+    }
+    if (date < min) {
+      return [new Error("Date of birth cannot be before January 1, 1900")]
+    }
+    if (date > new Date) {
+      return [new Error("Date of birth cannot be in the future.")]
+    }
+    return []
+  }
+}
+```
+
+This is useful for functional programming.
+
 ### Installation
 
 Yarn:

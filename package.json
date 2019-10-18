@@ -11,7 +11,15 @@
     "type": "git",
     "url": "git+https://github.com/zwhitchcox/validatorz.git"
   },
-  "keywords": [],
+  "keywords": [
+    "validation",
+    "validator",
+    "validatorz",
+    "fp",
+    "function programming",
+    "string validation",
+    "number validation"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
