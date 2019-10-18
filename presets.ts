@@ -32,7 +32,7 @@ export const presets = {
   ein: createStringValidator({
     regexp: "^[1-9]\\d?-\\d{7}$",
   }),
-  birthDate: () => {
+  dob: () => {
     const min = new Date(1900, 1, 0)
     return date => {
       if (!(date instanceof Date)) {

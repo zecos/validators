@@ -105,8 +105,8 @@ export const presets = {
   ein: createStringValidator({
     regexp: "^[1-9]\\d?-\\d{7}$",
   }),
-  // uses the current time/date to set the maximum for birthday
-  birthDate: () => {
+  // uses the current time/date to set the maximum for date of birth
+  dob: () => {
     const min = new Date(1900, 1, 0)
     return date => {
       if (!(date instanceof Date)) {
