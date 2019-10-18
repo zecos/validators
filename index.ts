@@ -7,6 +7,8 @@ export const createValidator = (requirements: IValidatorzInputRequirements | str
   if (typeof requirements === "string") {
     const preset = presets[requirements]
     if (!preset) {
+      if (requirements === "birthDate")
+        throw new Error("birthDate was changed to dob")
       throw new Error(`Cannot find preset ${requirements}`)
     }
     return preset
