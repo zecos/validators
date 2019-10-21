@@ -47,7 +47,6 @@ test('it detects must contain', () => {
 
 test('integration all checkers', () => {
   const passwordValidator = createStringValidator({
-    type: "string",
     mustContain: ["symbols", "uppercase", "lowercase", "digits"],
     validChars: ["symbols", "alphanumeric"],
     min: 8,
@@ -67,7 +66,6 @@ test('use presets', () => {
 
 test('digits', () => {
   const numberValidator = createNumberValidator({
-    type: "number",
     min: 3,
     max: 9,
   })

@@ -1,12 +1,10 @@
 
 export interface IValidatorzNumberRequirements {
-  type?: "number"
   min?: number
   max?: number
 }
 
 export interface IValidatorzStringRequirements {
-  type?: "string"
   mustContain?: string[] | string
   validChars?: string[] | string
   min?: number | Number
@@ -25,9 +23,8 @@ export type IValidatorzPresets = {
   username: IValidatorzRequirements,
   phone: IValidatorzRequirements,
 }
-export type ValidatorzPresetName = "dob" | "name" | "ein" | "password" | "phone" | "username" | "age" | "email"
 export type IValidatorzRequirements = IValidatorzNumberRequirements  |
-  IValidatorzStringRequirements | ValidatorFnCreator | ValidatorzPresetName
+  IValidatorzStringRequirements
 
 export type IValidatorzValidateOptions = {
   maxErrors?: number
