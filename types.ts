@@ -24,7 +24,7 @@ export type IValidatorzPresets = {
   phone: IValidatorzRequirements,
 }
 export type IValidatorzRequirements = IValidatorzNumberRequirements  |
-  IValidatorzStringRequirements
+  IValidatorzStringRequirements | ValidatorFnCreator
 
 export type IValidatorzValidateOptions = {
   maxErrors?: number
