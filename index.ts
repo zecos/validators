@@ -1,6 +1,5 @@
 export { createStringValidator, createNumberValidator } from './validatorz'
 import { createStringValidator, createNumberValidator } from './validatorz'
-export { presets as presetValidators } from './presets'
 
 
 export const nameValidator = createStringValidator({
