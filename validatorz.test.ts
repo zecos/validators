@@ -4,8 +4,10 @@ import {
     getHash,
     createMustContainValidator,
     createValidCharsValidator,
+    createNumberValidator,
+    createStringValidator,
 } from './validatorz';
-import { createValidator } from './index'
+import { emailValidator, dobValidator } from './index'
 import expect from 'expect'
 
 const testValidator = (fn, val, expectedVal, debug?) => {
@@ -44,7 +46,7 @@ test('it detects must contain', () => {
 })
 
 test('integration all checkers', () => {
-  const passwordValidator = createValidator({
+  const passwordValidator = createStringValidator({
     type: "string",
     mustContain: ["symbols", "uppercase", "lowercase", "digits"],
     validChars: ["symbols", "alphanumeric"],
@@ -59,13 +61,12 @@ test('integration all checkers', () => {
 })
 
 test('use presets', () => {
-  const emailValidator = createValidator("email")
   testValidator(emailValidator, "zwhit_chcox@gmail.com", [])
   testValidator(emailValidator, "password#1805", [new Error('Invalid input.')])
 })
 
 test('digits', () => {
-  const numberValidator = createValidator({
+  const numberValidator = createNumberValidator({
     type: "number",
     min: 3,
     max: 9,
@@ -76,9 +77,7 @@ test('digits', () => {
   testValidator(numberValidator, 10, [new Error("Must be less than or equal to 9.")])
 })
 
-test('hoc', () => {
-  const dobValidator = createValidator("dob")
+test('dobValidator', () => {
   testValidator(dobValidator, new Date(1920, 1,1), [])
   testValidator(dobValidator, new Date(1820, 1,1), [new Error("Date of birth cannot be before January 1, 1900")])
-
 })

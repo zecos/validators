@@ -15,14 +15,6 @@ export interface IValidatorzStringRequirements {
   number?: IValidatorzNumberRequirements
 }
 
-export interface IValidatorzInputStringReq extends IValidatorzStringRequirements {
-  type: "string"
-}
-
-export interface IValidatorzInputNumberReq extends IValidatorzNumberRequirements {
-  type: "number"
-}
-
 export type IValidatorzPresets = {
   dob: IValidatorzRequirements,
   name: IValidatorzRequirements,
@@ -33,8 +25,9 @@ export type IValidatorzPresets = {
   username: IValidatorzRequirements,
   phone: IValidatorzRequirements,
 }
-export type PresetName = "dob" | "name" | "ein" | "password" | "phone" | "username" | "age" | "email"
-export type IValidatorzRequirements = IValidatorzNumberRequirements  | IValidatorzStringRequirements | ValidatorFnCreator | PresetName
+export type ValidatorzPresetName = "dob" | "name" | "ein" | "password" | "phone" | "username" | "age" | "email"
+export type IValidatorzRequirements = IValidatorzNumberRequirements  |
+  IValidatorzStringRequirements | ValidatorFnCreator | ValidatorzPresetName
 
 export type IValidatorzValidateOptions = {
   maxErrors?: number
@@ -42,5 +35,4 @@ export type IValidatorzValidateOptions = {
 
 export type StringValidatorFn = (str: string) => Error[]
 export type NumberValidatorFn = (num: number) => Error[]
-export type ValidatorFn = StringValidatorFn | NumberValidatorFn
-export type ValidatorFnCreator = () => ValidatorFn
+export type ValidatorFnCreator = () => (val: any) => Error[]
