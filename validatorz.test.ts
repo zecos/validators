@@ -6,6 +6,7 @@ import {
     createValidCharsValidator,
     createNumberValidator,
     createStringValidator,
+    createOneOfValidator,
 } from './validatorz';
 import { emailValidator, dobValidator } from './index'
 import expect from 'expect'
@@ -78,4 +79,10 @@ test('digits', () => {
 test('dobValidator', () => {
   testValidator(dobValidator, new Date(1920, 1,1), [])
   testValidator(dobValidator, new Date(1820, 1,1), [new Error("Date of birth cannot be before January 1, 1900")])
+})
+
+test("oneOf validator", () => {
+  const fruitValidator = createOneOfValidator({options: ["apples", "oranges", "bananas"]})
+  expect(fruitValidator("peanuts")).toEqual([new Error("Must be apples, oranges, or bananas.")])
+  expect(fruitValidator("oranges")).toEqual([])
 })

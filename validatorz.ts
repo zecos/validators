@@ -1,4 +1,5 @@
 import { IValidatorzValidateOptions, IValidatorzNumberRequirements, IValidatorzStringRequirements, StringValidatorFn } from './types'
+import { orList } from 'human-list'
 
 const alphabetLower = 'abcdefghijklmnopqrstuvwxyz'
 const alphabetUpper = alphabetLower.toUpperCase()
@@ -164,6 +165,16 @@ export const createNumberValidator = ({min, max}: IValidatorzNumberRequirements)
     }
     if (num > max) {
       return [new Error(`Must be less than or equal to ${max}.`)]
+    }
+    return []
+  }
+}
+
+export const createOneOfValidator = ({options}: {options: any[]}) => {
+  const err = [new Error(`Must be ${orList(options)}.`)]
+  return input => {
+    if (!options.includes(input)) {
+      return err
     }
     return []
   }

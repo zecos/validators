@@ -41,6 +41,9 @@ const passwordValidator = createStringValidator({
 * `min`: minimum value
 * `max`: maximum value
 
+`createOneOfValidator` requirements can have the following properties:
+* `options`
+
 
 Then, you simply pass a string to validate. It will return an array of errors (empty array if no errors).
 ```js
@@ -69,6 +72,15 @@ const ageValidator = createNumberValidator({
 passwordValidator("19") // => [], empty array, there were no errors.
 
 passwordValidator(3) // => [Error: Must be greater than or equal to 3.]
+```
+
+`createOneOfValidator` verifies the value is in the list given in `options`:
+
+```ts
+const fruitValidator = createOneOfValidator({options: ["apples", "oranges", "bananas"]})
+
+fruitValidator("oranges") // => [], empty array, there were no errors.
+fruitValidator("peanuts") // => [Error: "Must be apples, oranges, or bananas."]
 ```
 
 ### Preset Validators

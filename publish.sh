@@ -1,0 +1,1 @@
+ts-node ./validatorz.test.ts && tsc && npm publish

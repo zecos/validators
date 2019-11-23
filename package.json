@@ -1,15 +1,16 @@
 {
-  "name": "validatorz",
-  "version": "2.3.3",
+  "name": "@zecos/validatorz",
+  "version": "0.0.1",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zwhitchcox/validatorz.git"
+    "url": "git+https://github.com/zecos/validatorz.git"
   },
   "keywords": [
     "validation",
@@ -23,10 +24,12 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zwhitchcox/validatorz/issues"
+    "url": "https://github.com/zecos/validatorz/issues"
   },
-  "homepage": "https://github.com/zwhitchcox/validatorz#readme",
-  "dependencies": {},
+  "homepage": "https://github.com/zecos/validatorz#readme",
+  "dependencies": {
+    "human-list": "^0.0.1"
+  },
   "devDependencies": {
     "expect": "^24.9.0",
     "tezt": "^1.1.0",
