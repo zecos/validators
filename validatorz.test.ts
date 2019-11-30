@@ -11,6 +11,9 @@ import {
 import { emailValidator, dobValidator } from './index'
 import expect from 'expect'
 
+
+const vehicles = ['Motorcycle', 'Bus', 'Car'];
+
 const testValidator = (fn, val, expectedVal, debug?) => {
   expect(
     fn(val)
