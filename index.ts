@@ -1,4 +1,4 @@
-export { createStringValidator, createNumberValidator } from './validatorz'
+export { createStringValidator, createNumberValidator, createOneOfValidator } from './validatorz'
 import { createStringValidator, createNumberValidator } from './validatorz'
 
 
