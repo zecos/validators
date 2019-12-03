@@ -35,7 +35,7 @@ export const einValidator = createStringValidator({
 
 export const dobValidator = (() => {
   const min = new Date(1900, 1, 0)
-  return date => {
+  return (date: any) => {
     if (!(date instanceof Date)) {
       try {
         date = new Date(date)
