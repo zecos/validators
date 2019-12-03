@@ -1,32 +1,32 @@
 
-export interface IValidatorzNumberRequirements {
+export interface IValidatorsNumberRequirements {
   min?: number
   max?: number
 }
 
-export interface IValidatorzStringRequirements {
+export interface IValidatorsStringRequirements {
   mustContain?: string[] | string
   validChars?: string[] | string
   min?: number | Number
   max?: number
   regexp?: RegExp | string
-  number?: IValidatorzNumberRequirements
+  number?: IValidatorsNumberRequirements
 }
 
-export type IValidatorzPresets = {
-  dob: IValidatorzRequirements,
-  name: IValidatorzRequirements,
-  ein: IValidatorzRequirements,
-  password: IValidatorzRequirements,
-  age: IValidatorzRequirements,
-  email: IValidatorzRequirements,
-  username: IValidatorzRequirements,
-  phone: IValidatorzRequirements,
+export type IValidatorsPresets = {
+  dob: IValidatorsRequirements,
+  name: IValidatorsRequirements,
+  ein: IValidatorsRequirements,
+  password: IValidatorsRequirements,
+  age: IValidatorsRequirements,
+  email: IValidatorsRequirements,
+  username: IValidatorsRequirements,
+  phone: IValidatorsRequirements,
 }
-export type IValidatorzRequirements = IValidatorzNumberRequirements  |
-  IValidatorzStringRequirements | ValidatorFnCreator
+export type IValidatorsRequirements = IValidatorsNumberRequirements  |
+  IValidatorsStringRequirements | ValidatorFnCreator
 
-export type IValidatorzValidateOptions = {
+export type IValidatorsValidateOptions = {
   maxErrors?: number
 }
 

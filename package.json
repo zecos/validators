@@ -1,6 +1,6 @@
 {
-  "name": "@zecos/validatorz",
-  "version": "0.0.3",
+  "name": "@zecos/validators",
+  "version": "0.0.0",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zecos/validatorz.git"
+    "url": "git+https://github.com/zecos/validators.git"
   },
   "keywords": [
     "validation",
     "validator",
-    "validatorz",
+    "validators",
     "fp",
     "function programming",
     "string validation",
@@ -24,9 +24,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zecos/validatorz/issues"
+    "url": "https://github.com/zecos/validators/issues"
   },
-  "homepage": "https://github.com/zecos/validatorz#readme",
+  "homepage": "https://github.com/zecos/validators#readme",
   "dependencies": {
     "human-list": "^0.0.1"
   },

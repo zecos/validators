@@ -7,7 +7,7 @@ import {
     createNumberValidator,
     createStringValidator,
     createOneOfValidator,
-} from './validatorz';
+} from './validators';
 import { emailValidator, dobValidator } from './index'
 import expect from 'expect'
 

@@ -1,4 +1,4 @@
-import { IValidatorzValidateOptions, IValidatorzNumberRequirements, IValidatorzStringRequirements, StringValidatorFn } from './types'
+import { IValidatorsValidateOptions, IValidatorsNumberRequirements, IValidatorsStringRequirements, StringValidatorFn } from './types'
 import { orList } from 'human-list'
 
 const alphabetLower = 'abcdefghijklmnopqrstuvwxyz'
@@ -110,7 +110,7 @@ const defaultValidateOptions = {
   maxErrors: Infinity,
 }
 
-export const createStringValidator = (requirements: IValidatorzStringRequirements): StringValidatorFn => {
+export const createStringValidator = (requirements: IValidatorsStringRequirements): StringValidatorFn => {
   const validatorFns = []
 
   if (requirements.mustContain) {
@@ -134,7 +134,7 @@ export const createStringValidator = (requirements: IValidatorzStringRequirement
     validatorFns.push(createRegexpValidator(regexp))
   }
 
-  return (str: string, options: IValidatorzValidateOptions = defaultValidateOptions): Error[] => {
+  return (str: string, options: IValidatorsValidateOptions = defaultValidateOptions): Error[] => {
     let errors = []
     for (const validatorFn of validatorFns) {
       const newError = validatorFn(str)
@@ -149,7 +149,7 @@ export const createStringValidator = (requirements: IValidatorzStringRequirement
   }
 }
 
-export const createNumberValidator = ({min, max}: IValidatorzNumberRequirements) => {
+export const createNumberValidator = ({min, max}: IValidatorsNumberRequirements) => {
   max = max || Infinity
   min = min || -Infinity
   return (num: number | string): Error[] => {

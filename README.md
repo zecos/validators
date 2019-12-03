@@ -1,6 +1,6 @@
-### Validatorz
+### Validators
 
-`validatorz` is...
+`validators` is...
 
 * a minimalistic data validation checker
 * fairly efficient (for js).
@@ -85,7 +85,7 @@ fruitValidator("peanuts") // => [Error: "Must be apples, oranges, or bananas."]
 
 ### Preset Validators
 
-`validatorz` also comes with some preset validators. Please open an issue/pr if there are more that you need.
+`validators` also comes with some preset validators. Please open an issue/pr if there are more that you need.
 
 ```ts
 export const nameValidator = createStringValidator({
@@ -144,10 +144,10 @@ export const dobValidator = () => {
 ### Installation
 
 Yarn:
-`yarn add validatorz`
+`yarn add validators`
 
 Npm:
-`npm i validatorz`
+`npm i validators`
 
 
 ### Dependencies

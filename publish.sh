@@ -1,1 +1,1 @@
-ts-node ./validatorz.test.ts && tsc && npm publish
+ts-node ./validators.test.ts && tsc && npm publish
