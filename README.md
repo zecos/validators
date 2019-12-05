@@ -42,7 +42,7 @@ const passwordValidator = createStringValidator({
 * `max`: maximum value
 
 `createOneOfValidator` requirements can have the following properties:
-* `options`
+* `options`: array of valid values
 
 
 Then, you simply pass a string to validate. It will return an array of errors (empty array if no errors).
